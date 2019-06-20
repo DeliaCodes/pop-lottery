@@ -1,0 +1,25 @@
+{
+  "name": "pop-lottery",
+  "version": "0.0.1",
+  "description": "## Created for Poppulo Technical Interview",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DeliaCodes/pop-lottery.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DeliaCodes/pop-lottery/issues"
+  },
+  "homepage": "https://github.com/DeliaCodes/pop-lottery#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
+  }
+}
