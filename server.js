@@ -4,6 +4,10 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 6000;
 
+app.get("/", (req, res) => {
+  res.json({ ok: true });
+});
+
 app.get("/api/*", (req, res) => {
   res.json({ ok: true });
 });
