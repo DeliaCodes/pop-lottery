@@ -4,13 +4,16 @@ require("dotenv").config();
 
 const PORT = process.env.PORT || 6000;
 
+const {
+  generateTicket,
+  amendTicket,
+  checkStatus,
+  serializeTicket
+} = require("./tickets");
+
 // Endpoints
 app.get("/", (req, res) => {
-  res.json({ ok: true });
-});
-
-app.get("/api/*", (req, res) => {
-  res.json({ ok: true });
+  res.status(200);
 });
 
 // should return list of tickets created
@@ -25,17 +28,22 @@ app.get("/api/ticket/:id", (req, res) => {
 
 // creates a ticket
 app.post("/api/ticket", (req, res) => {
-  res.json({ ok: true });
+  const newTicket = serializeTicket(generateTicket(3));
+  res.json({ ok: true, ticket: newTicket });
 });
 
 // adds ticket lines (or amends?)
 app.put("/api/ticket/:id", (req, res) => {
-  res.json({ ok: true });
+  //get body from URL?
+  const amendedTicket = serializeTicket(amendTicket(req.body.id, 3));
+  res.json({ ok: true, ticket: amendedTicket });
 });
 
 // retrieves status of ticket
 app.put("/api/status/:id", (req, res) => {
-  res.json({ ok: true });
+  // gets ticket from storage and names myTicket
+  const myTicket = checkStatus(req.body.id);
+  res.json({ ok: true, ticket: myTicket });
 });
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
