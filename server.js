@@ -2,6 +2,8 @@ const express = require("express");
 const app = express();
 require("dotenv").config();
 
+app.use(express.json());
+
 const PORT = process.env.PORT || 6000;
 
 const {
@@ -13,7 +15,7 @@ const {
 
 // Endpoints
 app.get("/", (req, res) => {
-  res.status(200);
+  res.sendFile(__dirname + "/index.html");
 });
 
 // should return list of tickets created
@@ -21,7 +23,8 @@ app.get("/api/ticket", (req, res) => {
   res.json({ ok: true });
 });
 
-// gets an individual ticket
+// gets an individual ticket -
+// check to see if its been checked = different serilizer
 app.get("/api/ticket/:id", (req, res) => {
   res.json({ ok: true });
 });
@@ -46,6 +49,38 @@ app.put("/api/status/:id", (req, res) => {
   res.json({ ok: true, ticket: myTicket });
 });
 
-app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+let server;
 
-module.exports = { app };
+function runServer() {
+  return new Promise((resolve, reject) => {
+    server = app
+      .listen(PORT, () => {
+        console.log(`Your app is listening on port ${PORT}`);
+        resolve(server);
+      })
+      .on("error", err => {
+        reject(err);
+      });
+  });
+}
+
+function closeServer() {
+  return new Promise((resolve, reject) => {
+    console.log("Closing server");
+    server.close(err => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
+    });
+  });
+}
+
+if (require.main === module) {
+  runServer().catch(err => console.error(err));
+}
+
+// app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
+
+module.exports = { app, runServer, closeServer };

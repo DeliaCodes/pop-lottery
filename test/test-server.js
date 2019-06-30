@@ -1,9 +1,7 @@
-"use strict";
-
 const chai = require("chai");
 const chaiHttp = require("chai-http");
 
-// const { app } = require("./server");
+const { app, runServer, closeServer } = require("../server");
 
 const expect = chai.expect;
 
@@ -17,6 +15,21 @@ chai.use(chaiHttp);
 // put /api/status/:id checks ticket and returns the whole thing
 //
 
-describe("should respond to get", function() {
-  // expect(result).to
+describe("", function() {
+  before(function() {
+    return runServer();
+  });
+
+  after(function() {
+    return closeServer();
+  });
+
+  it("should respond  with 200 at GET at root", function() {
+    return chai
+      .request(app)
+      .get("/")
+      .then(function(res) {
+        expect(res).to.have.status(200);
+      });
+  });
 });
