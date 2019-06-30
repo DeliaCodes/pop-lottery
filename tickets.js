@@ -1,30 +1,4 @@
 /* 
-series of lines on each ticket
-each line has 3 numbers - a 0, 1, or 2
-
-NB: a = 1st number, etc
-
-if  a + b + c = 2, line result = 10
-if a, b, c are the same, line result = 5
-if b and c !== a, line result = 1
-else line result = 0
-
-need: 
-A) Generate ticket with N lines
-B) Add N lines to a ticket
-C) Sort lines into outcomes
-D) once ticket status is checked, ticket is not editable
-
-const generateLine = () => {
-    let line = [];
-   return line.push(Math.floor(Math.random * Math.floor(3)))
-}
-
-const generateTicket = (number) => {
-    
-}
-
-
 Ticket = {
     id: unique,
     lines: [[a, b, c]]
@@ -75,6 +49,29 @@ const generateTicket = number => {
   return newTicket;
 };
 
+const checkStatus = ticketID => {
+  //get ticket from storage based on id
+  ticket.editable = false;
+  return ticket;
+};
+
+const amendTicket = (ticketID, numberOfLines) => {
+  //get ticket from storage based on id
+  for (let i = numberOfLines; i > 0; i--) {
+    let newLine = generateLine();
+    ticket.outcomes.push(generateOutcome(newLine));
+    ticket.lines.push(newLine);
+  }
+  return ticket;
+};
+
+const serializeTicket = ticket => ticket.id;
+
 module.exports = {
-  generateTicket
+  generateTicket,
+  generateOutput,
+  generateLine,
+  amendTicket,
+  checkStatus,
+  serializeTicket
 };
