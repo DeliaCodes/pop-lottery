@@ -69,7 +69,7 @@ const serializeTicket = ticket => ticket.id;
 
 module.exports = {
   generateTicket,
-  generateOutput,
+  generateOutcome,
   generateLine,
   amendTicket,
   checkStatus,
