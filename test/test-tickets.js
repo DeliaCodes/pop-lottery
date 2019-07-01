@@ -6,7 +6,9 @@ const {
   checkStatus,
   generateLine,
   amendTicket,
-  serializeTicket
+  serializeTicket,
+  serializeTicketWithChecked,
+  serializeAllTickets
 } = require("../tickets");
 
 describe("Ticket external methods", function() {
@@ -27,6 +29,47 @@ describe("Ticket external methods", function() {
     const wholeTicket = generateTicket(3);
     const serializedTicket = serializeTicket(wholeTicket);
     expect(serializedTicket).to.be.a("string");
+  });
+  it("checkStatus should return a whole ticket", function() {
+    const wholeTicket = generateTicket(3);
+    const checkedTicket = checkStatus(wholeTicket.id);
+    expect(checkedTicket.editable).to.be.false;
+    expect(checkedTicket.id).to.eq(wholeTicket.id);
+    expect(checkedTicket.lines)
+      .to.be.an("array")
+      .that.have.lengthOf(3);
+    expect(checkedTicket.outcomes)
+      .to.be.an("array")
+      .that.have.lengthOf(3);
+  });
+  it("serializeAllTickets should return an array of ids", function() {
+    const wholeTicket = generateTicket(3);
+    const myID = wholeTicket.id;
+    let ticketsObject = {};
+    ticketsObject[myID] = wholeTicket;
+    const serializedTicket = serializeAllTickets(ticketsObject);
+    expect(serializedTicket)
+      .to.be.an("array")
+      .that.have.lengthOf(1);
+  });
+  it("serializeTicketWithChecked should return a checked status message", function() {
+    const wholeTicket = generateTicket(3);
+    const serializedTicket = serializeTicketWithChecked(wholeTicket);
+    expect(serializedTicket.id).to.be.a("string");
+    expect(serializedTicket.checked)
+      .to.be.a("string")
+      .that.includes("This ticket has not been checked and can be amended");
+  });
+  it("serializeTicketWithChecked should return an already checked status message", function() {
+    let wholeTicket = generateTicket(3);
+    wholeTicket.editable = false;
+    const serializedTicket = serializeTicketWithChecked(wholeTicket);
+    expect(serializedTicket.id).to.be.a("string");
+    expect(serializedTicket.checked)
+      .to.be.a("string")
+      .that.includes(
+        "This ticket has already been checked and cannot be changed"
+      );
   });
 });
 
