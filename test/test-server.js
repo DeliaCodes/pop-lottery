@@ -7,7 +7,7 @@ const expect = chai.expect;
 
 chai.use(chaiHttp);
 
-describe("", function() {
+describe("Api endpoint tests", function() {
   before(function() {
     return runServer();
   });
@@ -16,15 +16,7 @@ describe("", function() {
     return closeServer();
   });
 
-  it("should respond with 200 at GET at root", function() {
-    return chai
-      .request(app)
-      .get("/")
-      .then(function(res) {
-        expect(res).to.have.status(200);
-      });
-  });
-  it("Post to ticket should return ticket id", function() {
+  it("Post to ticket api should return ticket id", function() {
     return chai
       .request(app)
       .post("/api/ticket")
@@ -99,9 +91,4 @@ describe("", function() {
           });
       });
   });
-  // double check these tests below
-  // get /api/ticket should return tickets created
-  // get /api/ticket/:id gets a ticket, returns editable status
-  // put /api/ticket/:id returns ticket id && using get amends ticket
-  // put /api/status/:id checks ticket and returns the whole thing
 });
