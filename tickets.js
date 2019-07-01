@@ -1,11 +1,14 @@
 /* 
-Ticket = {
+Ticket Data Structure = {
     id: unique,
     lines: [[a, b, c]]
     outcomes: []
     editable: true
 }
 */
+
+// mock storage for tickets
+let ticketStorage = {};
 
 const uniqid = require("uniqid");
 
@@ -34,6 +37,33 @@ const generateOutcome = line => {
   }
 };
 
+const saveToStorage = ticketObj => {
+  let myId = ticketObj.id;
+  return (ticketStorage[myId] = ticketObj);
+};
+
+const getTicketFromStorage = id => ticketStorage[id];
+
+const getAllTickets = () => ticketStorage;
+
+const serializeTicket = ticket => ticket.id;
+
+const serializeAllTickets = tickets => Object.keys(tickets);
+
+serializeTicketWithChecked = ticket => {
+  if (ticket.editable === true) {
+    return {
+      id: ticket[id],
+      checked: "This ticket has not been checked and can be amended"
+    };
+  } else {
+    return {
+      id: ticket[id],
+      checked: "This ticket has already been checked and cannot be changed"
+    };
+  }
+};
+
 const generateTicket = number => {
   let newTicket = {
     id: uniqid(),
@@ -46,26 +76,35 @@ const generateTicket = number => {
     newTicket.outcomes.push(generateOutcome(newLine));
     newTicket.lines.push(newLine);
   }
+  saveToStorage(newTicket);
   return newTicket;
 };
 
 const checkStatus = ticketID => {
-  //get ticket from storage based on id
+  let ticket = getTicketFromStorage(ticketID);
   ticket.editable = false;
+  saveToStorage(ticket);
   return ticket;
 };
 
 const amendTicket = (ticketID, numberOfLines) => {
-  //get ticket from storage based on id
-  for (let i = numberOfLines; i > 0; i--) {
-    let newLine = generateLine();
-    ticket.outcomes.push(generateOutcome(newLine));
-    ticket.lines.push(newLine);
+  if (!getTicketFromStorage(ticketID)) {
+    return "No ticket with that id exists, please try again";
+  } else {
+    let ticket = getTicketFromStorage(ticketID);
+    if (ticket.editable === true) {
+      for (let i = numberOfLines; i > 0; i--) {
+        let newLine = generateLine();
+        ticket.outcomes.push(generateOutcome(newLine));
+        ticket.lines.push(newLine);
+      }
+      saveToStorage(ticket);
+      return ticket;
+    } else {
+      return "Sorry, that ticket cannot be edited - it has already been checked";
+    }
   }
-  return ticket;
 };
-
-const serializeTicket = ticket => ticket.id;
 
 module.exports = {
   generateTicket,
@@ -73,5 +112,9 @@ module.exports = {
   generateLine,
   amendTicket,
   checkStatus,
-  serializeTicket
+  serializeTicket,
+  getAllTickets,
+  serializeAllTickets,
+  getTicketFromStorage,
+  serializeTicketWithChecked
 };

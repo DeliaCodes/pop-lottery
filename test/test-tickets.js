@@ -20,9 +20,8 @@ describe("Ticket external methods", function() {
     expect(newTicket).to.be.an("object");
   });
   it("amendTicket should return ticket with new lines", function() {
-    const originalTicket = generateTicket(3);
-    const updatedTicket = amendTicket(originalTicket.id, 3);
-    expect(updatedTicket.lines.length).to.have.lengthOf(6);
+    const updatedTicket = amendTicket(generateTicket(3).id, 3);
+    expect(updatedTicket.lines).to.have.lengthOf(6);
   });
   it("serializeTicket should only return ticket id", function() {
     const wholeTicket = generateTicket(3);
