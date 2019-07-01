@@ -1,5 +1,6 @@
 /* 
-Ticket Data Structure = {
+Default Ticket Data Structure 
+one ticket = {
     id: unique,
     lines: [[a, b, c]]
     outcomes: []
@@ -7,10 +8,22 @@ Ticket Data Structure = {
 }
 */
 
+const uniqid = require("uniqid");
+
 // mock storage for tickets
 let ticketStorage = {};
 
-const uniqid = require("uniqid");
+// mock storage operations
+const saveToStorage = ticketObj => {
+  let myId = ticketObj.id;
+  return (ticketStorage[myId] = ticketObj);
+};
+
+const getTicketFromStorage = id => ticketStorage[id];
+
+const getAllTickets = () => ticketStorage;
+
+// line and outcome operations
 
 const generateLine = () => {
   let line = [];
@@ -37,14 +50,7 @@ const generateOutcome = line => {
   }
 };
 
-const saveToStorage = ticketObj => {
-  let myId = ticketObj.id;
-  return (ticketStorage[myId] = ticketObj);
-};
-
-const getTicketFromStorage = id => ticketStorage[id];
-
-const getAllTickets = () => ticketStorage;
+// serialization methods
 
 const serializeTicket = ticket => ticket.id;
 
@@ -53,16 +59,18 @@ const serializeAllTickets = tickets => Object.keys(tickets);
 serializeTicketWithChecked = ticket => {
   if (ticket.editable === true) {
     return {
-      id: ticket[id],
+      id: ticket.id,
       checked: "This ticket has not been checked and can be amended"
     };
   } else {
     return {
-      id: ticket[id],
+      id: ticket.id,
       checked: "This ticket has already been checked and cannot be changed"
     };
   }
 };
+
+// ticket generation and manipulation methods
 
 const generateTicket = number => {
   let newTicket = {
