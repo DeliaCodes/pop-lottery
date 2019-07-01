@@ -50,8 +50,7 @@ app.put("/api/ticket/:id", (req, res) => {
 
 // retrieves status of ticket
 app.put("/api/status/:id", (req, res) => {
-  const myTicketID = checkStatus(req.body.id);
-  let myTicket = checkStatus(myTicketID);
+  const myTicket = checkStatus(req.body.id);
   res.json({ ok: true, ticket: myTicket });
 });
 
