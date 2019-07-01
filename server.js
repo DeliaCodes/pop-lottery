@@ -10,7 +10,11 @@ const {
   generateTicket,
   amendTicket,
   checkStatus,
-  serializeTicket
+  serializeTicket,
+  getAllTickets,
+  serializeAllTickets,
+  getTicketFromStorage,
+  serializeTicketWithChecked
 } = require("./tickets");
 
 // Endpoints
@@ -20,13 +24,16 @@ app.get("/", (req, res) => {
 
 // should return list of tickets created
 app.get("/api/ticket", (req, res) => {
-  res.json({ ok: true });
+  let allTickets = serializeAllTickets(getAllTickets());
+  res.json({ ok: true, tickets: allTickets });
 });
 
-// gets an individual ticket -
-// check to see if its been checked = different serilizer
+// gets an individual ticket and passes on whether its been checked
 app.get("/api/ticket/:id", (req, res) => {
-  res.json({ ok: true });
+  const myTicket = serializeTicketWithChecked(
+    getTicketFromStorage(req.body.id)
+  );
+  res.json({ ok: true, ticket: myTicket });
 });
 
 // creates a ticket
@@ -37,15 +44,14 @@ app.post("/api/ticket", (req, res) => {
 
 // adds ticket lines (or amends?)
 app.put("/api/ticket/:id", (req, res) => {
-  //get body from URL?
   const amendedTicket = serializeTicket(amendTicket(req.body.id, 3));
   res.json({ ok: true, ticket: amendedTicket });
 });
 
 // retrieves status of ticket
 app.put("/api/status/:id", (req, res) => {
-  // gets ticket from storage and names myTicket
-  const myTicket = checkStatus(req.body.id);
+  const myTicketID = checkStatus(req.body.id);
+  let myTicket = checkStatus(myTicketID);
   res.json({ ok: true, ticket: myTicket });
 });
 
@@ -80,7 +86,5 @@ function closeServer() {
 if (require.main === module) {
   runServer().catch(err => console.error(err));
 }
-
-// app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
 
 module.exports = { app, runServer, closeServer };
