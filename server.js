@@ -18,17 +18,14 @@ const {
 } = require("./tickets");
 
 // Endpoints
-app.get("/", (req, res) => {
-  res.sendFile(__dirname + "/index.html");
-});
 
-// should return list of tickets created
+// Returns list of tickets created
 app.get("/api/ticket", (req, res) => {
   let allTickets = serializeAllTickets(getAllTickets());
   res.json({ ok: true, tickets: allTickets });
 });
 
-// gets an individual ticket and passes on whether its been checked
+// gets an individual ticket and passes on whether the ticket's status has been checked
 app.get("/api/ticket/:id", (req, res) => {
   const myTicket = serializeTicketWithChecked(
     getTicketFromStorage(req.body.id)
@@ -36,19 +33,20 @@ app.get("/api/ticket/:id", (req, res) => {
   res.json({ ok: true, ticket: myTicket });
 });
 
-// creates a ticket
+// creates a ticket, returns ticket id as a string
 app.post("/api/ticket", (req, res) => {
   const newTicket = serializeTicket(generateTicket(3));
   res.json({ ok: true, ticket: newTicket });
 });
 
-// adds ticket lines (or amends?)
+// adds three additional lines + outcomes to a ticket
 app.put("/api/ticket/:id", (req, res) => {
   const amendedTicket = serializeTicket(amendTicket(req.body.id, 3));
   res.json({ ok: true, ticket: amendedTicket });
 });
 
-// retrieves status of ticket
+// retrieves status of ticket, sends the entire ticket to user
+// once a ticket's status is checked, it cannot be amended
 app.put("/api/status/:id", (req, res) => {
   const myTicket = checkStatus(req.body.id);
   res.json({ ok: true, ticket: myTicket });
